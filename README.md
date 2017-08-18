@@ -5,3 +5,10 @@ Así pues aprovecho esta Task para aprender Github, markdown y R. Todo de una ta
 
 ## primer commit
 En este primer commit pongo los dos ficheros básicos para empezar a trabajar.
+
+## segundo commit
+Añado un README.md (este que lees) para explicar la evolución del programa
+
+## tercer commit
+Descubro una posible causa del error. 
+Aún no he subido el fichero .R original causante del hilo de discusión. Estoy en pruebas, aprendiendo a usar Git y Github
