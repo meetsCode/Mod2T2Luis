@@ -37,5 +37,6 @@ Interesantes me resulta leer el mape (:=main absolute percent error) de cada uno
 Por último y como resultado final está el *data.frame* **resultado** que realmente contiene el cálculo de los volúmenes de ventas previstas.
 Estoy cerca del final. Ahora me toca comparar con los anteriores resultados con *Weka*.
 
-### Comienzo aquí 
+### Comienzo aquí un nuevo hilo en el que hace lo mismo que en otro (master) pero en menos ficheros.
+
 
