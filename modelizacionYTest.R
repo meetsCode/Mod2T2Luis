@@ -27,22 +27,26 @@ modelizo_RF_BlackWell <- function(datasource){
   #Random Forest
   #install.packages("randomForest")  #solo la primera vez. Las siguientes molesta pero no impide
   library(randomForest)
-  model <- randomforest(formula = datasource$Volume ~ . , data = datasource)
+  model <- randomForest(formula = datasource$Volume ~ . , data = datasource, 
+                        importance=TRUE,proximity=TRUE)
+
   summary(model)
   return(model)
 }
 
-modelo <- modelizo_lm_BlackWell(data)
+
+modelo <- modelizo_RF_BlackWell(data)
 summary(modelo)
 
-
+#predictions <- predict( modelo, trainSet, interval = "predict", level = 0.95)
+#comparison <- predictions
 
 
 #### EJERCICIO.  pruebo el trainSet  ####
 comprobando <- function(modeloM, datos){
   predictions <- predict( modeloM, datos, interval = "predict", level = 0.95)
+  #comparison <- predictions
   comparison <- cbind(datos, predictions)
-  
   return(comparison)
 }
 addComparativa <- function(comparison){
@@ -83,10 +87,12 @@ mapeTrain <- mi_mape(comparisonTrain)
 
 #### EJERCICIO.  pruebo el testSet  #### 
 
-predict( modelo, data, interval = "predict", level = 0.95)
 comparisonTest <- comprobando(modeloM = modelo, datos = testSet)
 comparisonTest <- addComparativa(comparisonTest)
 mapeTest <- mi_mape(comparisonTest)
+
+mapeTest
+mapeTrain
 
 
 
