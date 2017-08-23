@@ -1,5 +1,7 @@
 
 
+source("absorcionYPreparacionDatos.R", echo = TRUE)
+
 
 #### EJERCICIO. Modelización ####
 trainSize <- round(nrow(data) * 0.7 )
@@ -35,7 +37,7 @@ modelizo_RF_BlackWell <- function(datasource){
 }
 
 
-modelo <- modelizo_RF_BlackWell(data)
+modelo <- modelizo_lm_BlackWell(data)
 summary(modelo)
 
 #predictions <- predict( modelo, trainSet, interval = "predict", level = 0.95)
@@ -45,7 +47,6 @@ summary(modelo)
 #### EJERCICIO.  pruebo el trainSet  ####
 comprobando <- function(modeloM, datos){
   predictions <- predict( modeloM, datos, interval = "predict", level = 0.95)
-  #comparison <- predictions
   comparison <- cbind(datos, predictions)
   return(comparison)
 }

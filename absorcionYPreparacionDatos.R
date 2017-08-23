@@ -1,3 +1,9 @@
+#! Rscript
+
+# source("absorcionYPreparacionDatos.R", echo = TRUE)
+
+
+
 
 dataRaw <- read.csv("/Users/luis/Desktop/existing product attributes.csv", stringsAsFactors=FALSE)
 
@@ -50,12 +56,13 @@ str(data)
 #me daba error con una columna de string(1).
 correlacion <- cor(data[,2:18])
 correlacion  #lo que esté relacionado lo pongo en el vector de la siguiente función
+write.csv(correlacion, file = "/Users/luis/Desktop/correlationAllColumns.csv" )
 
 seleccionColumnas <- function(dataRAW){
   #observo y decido que sobran: Todo aquello que tiene correlación >0.85
   #Son: 5Star, 3star, 1 star, NegativeService: Columnas 2,4,6 y 8 +1 por la primera 
   #eliminada. La 2 va fuera por ser arbitraria.
-  columnasDeOverfit <- c(2, 4, 5, 6, 8, 10, 12)
+  columnasDeOverfit <- c(2, 4, 6, 8, 10, 11 ,12, 17)
   columnasDeOverfit <- columnasDeOverfit * -1 #para que las quite las hago negativas
   dataNew <- dataRAW[, columnasDeOverfit]
   return(dataNew)
@@ -63,4 +70,26 @@ seleccionColumnas <- function(dataRAW){
 
 data <- seleccionColumnas(data)
 str(data)
+
+# #Razones:
+# 1- "ProductType", 2- "Product",3- "Price",                        
+# 4- "x5StarReviews",5- "x4StarReviews",6- "x3StarReviews",7- "x2StarReviews",
+# 8- "x1StarReviews",9- "X.Positive.Service.Review.",
+# 10- "NegativeServiceReview",11- "WouldConsumerRecommendProduct",12- "BestSellersRank",
+# 13- "ShippingWeightLbs",14- "ProductDepth",15- "ProductWidth",16- "ProductHeight",
+# 17- "ProfitMargin",18- "Volume"
+# 
+# La 2 (Product) es un codigo interno (referencia) sin valor ni sentido de asignación.
+# 
+
+
+# 
+#4- "x5StarReviews",6- "x3StarReviews", 8- "x1StarReviews" El 5 está TRAMPEADO con el volumen y el 3 está relacionado con 4 y 2 estrellas. 
+# El 1 está relacionado con 2 estrellas. Como el 4 estrellas es muy importante para el volumen (correlación de 0.89 se queda)
+
+# 10- "NegativeServiceReview"  porque está correlacionado con  2Stars(col 7) que se queda porque tiene mayor correlacion (0.49 frente a 0.30)
+# 11- "WouldConsumerRecommendProduct" ¿Quizás los nuevos productos no tienen este dato. ?????????
+# 12- "BestSellersRank" porque en los nuevos productos es un dato no existente o inutil. 
+# 17- "ProfitMargin" porque al cliente no le importa mi margen. Ni tan siquiera lo conoce.
+
 
