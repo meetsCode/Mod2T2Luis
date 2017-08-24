@@ -1,8 +1,6 @@
 #! Rscript
-
+#/Users/luis/Desktop/Mooc Pharo/dd/Modulo 2/Mod2Task2/Mod2T2Luis
 # source("absorcionYPreparacionDatos.R", echo = TRUE)
-
-
 
 
 dataRaw <- read.csv("/Users/luis/Desktop/existing product attributes.csv", stringsAsFactors=FALSE)
@@ -49,7 +47,8 @@ str(data)
 
 
 
-
+# data <- data[, -4]
+# correlacion <- cor(data[, -1])  Correlación le da distinto porque él ya ha limpiado algo según vio algo.
 #### EJERCICIO. evitar Overfitting ####
 
 
@@ -88,7 +87,7 @@ str(data)
 # El 1 está relacionado con 2 estrellas. Como el 4 estrellas es muy importante para el volumen (correlación de 0.89 se queda)
 
 # 10- "NegativeServiceReview"  porque está correlacionado con  2Stars(col 7) que se queda porque tiene mayor correlacion (0.49 frente a 0.30)
-# 11- "WouldConsumerRecommendProduct" ¿Quizás los nuevos productos no tienen este dato. ?????????
+# 11- "WouldConsumerRecommendProduct" ¿Quizás los nuevos productos no tienen este dato o no es fiable. Es la = opinión que jefa.
 # 12- "BestSellersRank" porque en los nuevos productos es un dato no existente o inutil. 
 # 17- "ProfitMargin" porque al cliente no le importa mi margen. Ni tan siquiera lo conoce.
 
