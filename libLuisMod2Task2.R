@@ -52,18 +52,40 @@ lineas_Includes <- function( vectorRaw, claves){
   return(acumuladoEliminables)
 }
 
-seleccionFilas <- function(dataRAW){
+seleccionFilasBuenas <- function(dataRAW ){
+  #veo que algunas instancias tienen datos trampa.
+  #Son datos que alguien ha repetido porque son iguales en todos campos
+  
+  #filasDeTrampas <- -41:-35
+  # filasDeTrampas <- c(filasDeTrampas, c(1, 2, 3, 4, 5, 26, 35, 36, 49, 50, 51, 52, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73) )
+  filasCorrectas <- c(1, 2, 3, 4, 5, 26, 35, 36, 49, 50, 51, 52, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 80)
+  dataNew <- dataRAW[filasCorrectas, ]
+  return(dataNew)
+}
+
+seleccionFilasMas <- function(dataRAW, filas){
   #veo que algunas instancias tienen datos trampa.
   #Son datos que alguien ha repetido porque son iguales en todos campos
   filasDeTrampas <- -41:-35
+  filasDeTrampas <- c(filasDeTrampas, filas)
   dataNew <- dataRAW[filasDeTrampas, ]
   return(dataNew)
 }
 
 
 
-
 #### EJERCICIO. evitar Overfitting ####
+foo <- function(){
+  #CODIGO QUE REPITO PARA DETECTAR COLUMNAS FEAS Y ELIMINARLAS
+  columnasBorrables <- c(2, 4, 12, 17 ,13)
+  columnaEnAnalisis <- 13
+  data <- seleccionColumnas_En( c(columnaEnAnalisis, columnasBorrables) , dataRenombrada )
+  #data <- seleccionColumnasConsolidadas( dataRenombrada )
+  
+  modelo  <- modelizo_lm_BlackWell(data)
+  summary(modelo)
+  correlacion <- cor(data[,-1])
+}
 
 seleccionColumnas_En <- function( columnasBorrables , dataRAW ){
   #observo y decido que sobran: Todo aquello que tiene correlación >0.85
@@ -107,10 +129,13 @@ seleccionColumnasConsolidadas <- function(dataRAW){
   # VAMOS CON LAS LÍNEAS.
 # Debo encontrar las líneas muy sucias (con muchos NAs o valores disparatados); repetidas por 
 # error (copia y pega para completar); y aquellas que no tienen nada que ver con el tema a 
-# tratar (ej: categoricas que eliminan)
+# tratar (ej: categoricas que eliminan).
+# Solo he borrado las que no tienen nada que ver con el tema que son la que NO empiezan por el test
 # 
+  
   # VAMOS CON LA CORRELACIÓN ENTRE VARIABLES INDEPENDIENTES.
   
+
 #6- "x3StarReviews", 8- "x1StarReviews" El 3 está relacionado con 4 y 2 estrellas. 
 # El 1 está relacionado con 2 estrellas. Como el 4 estrellas es muy importante para el volumen (correlación de 0.89 se queda)
 # 10- "NegativeServiceReview"  porque está correlacionado con  2Stars(col 7) que se queda porque tiene mayor correlacion (0.49 frente a 0.30)
