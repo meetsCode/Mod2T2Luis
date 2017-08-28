@@ -1,6 +1,18 @@
 
-#### EJERCICIO. Absorción datos y construcción Modelo #### 
-source("/Users/luis/Desktop/Mooc Pharo/dd/Modulo 2/Mod2Task2/Mod2T2Luis/modelizacionYTestLM.R", echo = TRUE)
+source("/Users/luis/Desktop/Mooc Pharo/dd/Modulo 2/Mod2Task2/Mod2T2Luis/libLuisMod2Task2.R")
+dataRaw <- read.csv("/Users/luis/Desktop/existing product attributes.csv", stringsAsFactors=FALSE)
+dataRenombrada <- preparacionDatos(dataRaw)
+dataFilasLimpias <- seleccionFilasBuenas(dataRenombrada)
+dataLimpias <- seleccionColumnasConsolidadas(dataFilasLimpias)
+
+
+modelo  <- modelizo_lm_BlackWell(dataLimpias)
+summary(modelo)
+
+
+
+
+
 
 #### EJERCICIO.  Making new predictions  #### 
 #dataRaw <- read.csv("/Users/luis/Desktop/existing product attributes.csv", stringsAsFactors=FALSE)

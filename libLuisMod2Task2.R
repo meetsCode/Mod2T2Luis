@@ -26,6 +26,10 @@ preparacionDatos <- function(dataRAW){
   dataNew$BestSellersRank[is.na(dataNew$BestSellersRank)] <- mean(dataNew$BestSellersRank, na.rm = TRUE)
   
   #pienso que ProductType es un Factor:
+  # dataNew[73,1] <- "'Game Console'"
+  # dataNew[80,1] <- "GameConsole"
+  dataNew[which(dataNew[,1] == "'Game Console'"),1] <- "GameConsole"
+  dataNew[which(dataNew[,1] == "'Extended Warranty'"),1] <- "Extended_Warranty"
   dataNew$ProductType <- factor(dataNew$ProductType)
   
   return(dataNew)
@@ -94,11 +98,12 @@ seleccionColumnas_En <- function( columnasBorrables , dataRAW ){
   dataNew <- dataRAW[, -columnasBorrables] #para que las quite las hago negativas
   return(dataNew)
 }
+
 seleccionColumnasConsolidadas <- function(dataRAW){
   #observo y decido que sobran: Todo aquello que tiene correlación >0.85
   #Son: 5Star, 3star, 1 star, NegativeService: Columnas 2,4,6 y 8 +1 por la primera 
   #eliminada. La 2 va fuera por ser arbitraria.
-  columnasDeOverfit <- c(2, 4, 6, 8, 10, 11 ,12, 13, 17) 
+  columnasDeOverfit <- c(2, 4, 12, 17 , 13, 5, 7, 8) 
   dataNew <- seleccionColumnas_En(columnasDeOverfit, dataRAW)
   return(dataNew)
 
@@ -112,7 +117,7 @@ seleccionColumnasConsolidadas <- function(dataRAW){
 # 13- "ShippingWeightLbs",14- "ProductDepth",15- "ProductWidth",16- "ProductHeight",
 # 17- "ProfitMargin",18- "Volume"
 # 
-# 2- "Product" es un codigo interno (referencia) sin valor ni sentido de asignación.
+# 2- "Product" es un codigo interno (referencia) sin valor ni sentido de asignación. R^0.5: 1
 # 4- "x5StarReviews", El 5 está TRAMPEADO con el volumen. Lo decubro porque tiene un R-squared = 1 o sea perfercto con una 
 #     coef. de 4 perfecto en relación volumen . Si lo quito R^2 baja a 0.929.  
 # 12- "BestSellersRank" porque en los nuevos productos es un dato no existente o inutil. Es la = opinión que jefa. 
@@ -136,12 +141,20 @@ seleccionColumnasConsolidadas <- function(dataRAW){
   # VAMOS CON LA CORRELACIÓN ENTRE VARIABLES INDEPENDIENTES.
   
 
-#6- "x3StarReviews", 8- "x1StarReviews" El 3 está relacionado con 4 y 2 estrellas. 
-# El 1 está relacionado con 2 estrellas. Como el 4 estrellas es muy importante para el volumen (correlación de 0.89 se queda)
-# 10- "NegativeServiceReview"  porque está correlacionado con  2Stars(col 7) que se queda porque tiene mayor correlacion (0.49 frente a 0.30)
-# 11- "WouldConsumerRecommendProduct" ¿Quizás los nuevos productos no tienen este dato o no es fiable. 
+# 5- "x4StarReviews" está realcionado con 6- "x3StarReviews",7- "x2StarReviews". Prefiero borrar el
+     #5- "x4StarReviews", porque tiene peor coeficiente que el 6- "x3StarReviews" con el volumen
+     # Tras borrar los valores son: R^0.5:  0.9995   
   
-  
+# 6- "x3StarReviews", está relacionado con  7-"x2StarReviews"0.960, 8- "x1StarReviews"0.874. 
+    # Borro 7-"x2StarReviews" porque tiene peor predicción con Volumen
+    # Tras borrar los valores son: R^0.5:  0.9993
+
+# 6- "x3StarReviews", está relacionado con  8- "x1StarReviews" 0.874. 
+  # Borro 8- "x1StarReviews" porque tiene peor predicción con Volumen(0.984 vs. 0.882)
+  # Tras borrar los valores continua: R^0.5:  0.9993
+
+
+#Siempre debo atender a estas preguntas. 
 #  ¿El dato no nos sirve de nada porque nadie lo lee o algo así?
 #  ¿El título no es lo que parece? 
 }
