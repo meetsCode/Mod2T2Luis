@@ -79,18 +79,6 @@ seleccionFilasMas <- function(dataRAW, filas){
 
 
 #### EJERCICIO. evitar Overfitting ####
-foo <- function(){
-  #CODIGO QUE REPITO PARA DETECTAR COLUMNAS FEAS Y ELIMINARLAS
-  columnasBorrables <- c(2, 4, 12, 17 ,13)
-  columnaEnAnalisis <- 13
-  data <- seleccionColumnas_En( c(columnaEnAnalisis, columnasBorrables) , dataRenombrada )
-  #data <- seleccionColumnasConsolidadas( dataRenombrada )
-  
-  modelo  <- modelizo_lm_BlackWell(data)
-  summary(modelo)
-  correlacion <- cor(data[,-1])
-}
-
 seleccionColumnas_En <- function( columnasBorrables , dataRAW ){
   #observo y decido que sobran: Todo aquello que tiene correlación >0.85
   #Son: 5Star, 3star, 1 star, NegativeService: Columnas 2,4,6 y 8 +1 por la primera 
