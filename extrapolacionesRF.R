@@ -1,6 +1,7 @@
 
-
 # probando protocolo actuación --------------------------------------------
+cat("\014") #limpio consola
+rm(list = ls())
 #### 1- TIPO DE DATOS ####
 #por columna: Renombrar columnas y ver si tu tipo de datos es correcto.
 #Es posible que en este campo ya necesite observar los NA
@@ -58,7 +59,7 @@ columnasBorrables <- c(2, 4, 12, 17 , 13, 5, 7, 8)
 columnaEnAnalisis <- 2
 data <- seleccionColumnas_En( c(columnaEnAnalisis, columnasBorrables) , dataRenombrada )
 
-modelo  <- modelizo_RF_BlackWell(data)
+modelo  <- modelizo_lm_BlackWell(data)
 summary(modelo)
 correlacion <- cor(data[,-1])
 which(correlacion >= 0.85)
@@ -69,7 +70,7 @@ dataRenombrada <- data # y paso estos valores a la funcion seleccionColumnasCons
 # dataRenombrada
 trainSize <- round(nrow(dataRenombrada) * 0.7 )
 testSize <- nrow(dataRenombrada) - trainSize
-set.seed(123)
+set.seed(126)
 trainPosition <- sample(x = nrow(dataRenombrada), size = trainSize)
 trainSet <- dataRenombrada[trainPosition,]
 testSet <- dataRenombrada[-trainPosition,]
@@ -79,37 +80,43 @@ testSet <- dataRenombrada[-trainPosition,]
 modelo <- modelizo_RF_BlackWell(trainSet)
 summary(modelo)
 
-# Call:
-#   svm(formula = datasource$Volume ~ ., data = datasource)
 # 
-# 
-# Parameters:
-#   SVM-Type:  eps-regression 
-# SVM-Kernel:  radial 
-# cost:  1 
-# gamma:  0.05 
-# epsilon:  0.1 
-# 
-# 
-# Number of Support Vectors:  14
+# Length Class  Mode     
+# call              5    -none- call     
+# type              1    -none- character
+# predicted        17    -none- numeric  
+# mse             500    -none- numeric  
+# rsq             500    -none- numeric  
+# oob.times        17    -none- numeric  
+# importance       18    -none- numeric  
+# importanceSD      9    -none- numeric  
+# localImportance   0    -none- NULL     
+# proximity       289    -none- numeric  
+# ntree             1    -none- numeric  
+# mtry              1    -none- numeric  
+# forest           11    -none- list     
+# coefs             0    -none- NULL     
+# y                17    -none- numeric  
+# test              0    -none- NULL     
+# inbag             0    -none- NULL     
+# terms             3    terms  call 
 
-
-#### 7-(fallo) pruebo el trainSet  ####
+#### 7- pruebo el trainSet  ####
 
 comparisonTrain <- comprobando(modeloM = modelo, datos = trainSet)
 comparisonTrain <- addComparativa(comparisonTrain)
-mapeTrain <- mi_mape(comparisonTrain)   #261.3445% de error absoluto
+mapeTrain <- mi_mape(comparisonTrain)   #269.7766% de error absoluto
 
 # el testSet  # 
 
 comparisonTest <- comprobando(modeloM = modelo, datos = testSet)
 comparisonTest <- addComparativa(comparisonTest)
-mapeTest <- mi_mape(comparisonTest)  #65.67938% de error absoluto
+mapeTest <- mi_mape(comparisonTest)  #141.1907% de error absoluto
 
 #con 123 la cosa empeoró:
 #   
-# > mapeTest     3144.439
-# > mapeTrain    838.4039
+# > mapeTest     590.4545
+# > mapeTrain    3942.817
 
 mapeTest
 mapeTrain
@@ -118,10 +125,30 @@ mapeTrain
 modelo <- modelizo_RF_BlackWell(dataRenombrada)
 summary(modelo)
 
+# 
+# Length Class  Mode     
+# call              5    -none- call     
+# type              1    -none- character
+# predicted        24    -none- numeric  
+# mse             500    -none- numeric  
+# rsq             500    -none- numeric  
+# oob.times        24    -none- numeric  
+# importance       18    -none- numeric  
+# importanceSD      9    -none- numeric  
+# localImportance   0    -none- NULL     
+# proximity       576    -none- numeric  
+# ntree             1    -none- numeric  
+# mtry              1    -none- numeric  
+# forest           11    -none- list     
+# coefs             0    -none- NULL     
+# y                24    -none- numeric  
+# test              0    -none- NULL     
+# inbag             0    -none- NULL     
+# terms             3    terms  call
 
 comparisonTrain <- comprobando(modeloM = modelo, datos = dataRenombrada)
 comparisonTrain <- addComparativa(comparisonTrain)  
-mapeTrain <- mi_mape(comparisonTrain)    #941.7546% de error absoluto
+mapeTrain <- mi_mape(comparisonTrain)    #590.0935% de error absoluto
 
 # Me quedo con el del TrainSet
 
@@ -139,6 +166,6 @@ str(dataP)
 
 predictions <- comprobando(modeloM = modelo, datos = dataP)
 resultado <- cbind(data.frame(dataNewP$X.Product...), predictions)
-write.csv(resultado, file = "/Users/luis/Desktop/existingResult_svm.csv" )
+write.csv(resultado, file = "/Users/luis/Desktop/existingResult_RF.csv" )
 
 resultado

@@ -1,7 +1,10 @@
-
+#!RStudio
 
 
 # probando protocolo actuación --------------------------------------------
+cat("\014")       #limpio consola
+rm(list = ls())   #borro todos los objetos de memoria
+
 #### 1- TIPO DE DATOS ####
 #por columna: Renombrar columnas y ver si tu tipo de datos es correcto.
 #Es posible que en este campo ya necesite observar los NA
