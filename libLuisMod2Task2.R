@@ -202,13 +202,12 @@ mi_mape <- function(unDataSet){
   #mape (:= mean absolute percent error)
   #encuentro las filas con valor "Inf" (infinito, las que tenían numerador=0) que solo dan problemas
   infinitePosition <- which(unDataSet$absolutePercentError == Inf)
-  infinitePosition <- infinitePosition * -1
-  #los elimino
+  #localizo los infinitos para eliminarlos porque me darían error al calcular medias.
   # return(length(mape) == 0)
   if (length(infinitePosition) == 0) {
     dataDeTrabajo <- unDataSet
   } else {
-    dataDeTrabajo <- unDataSet[infinitePosition, ]
+    dataDeTrabajo <- unDataSet[-infinitePosition, ]
   }
   
   #calculo el mape con el resto

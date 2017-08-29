@@ -1,6 +1,5 @@
 
 
-
 # probando protocolo actuación --------------------------------------------
 #### 1- TIPO DE DATOS ####
 #por columna: Renombrar columnas y ver si tu tipo de datos es correcto.
@@ -70,104 +69,61 @@ dataRenombrada <- data # y paso estos valores a la funcion seleccionColumnasCons
 # dataRenombrada
 trainSize <- round(nrow(dataRenombrada) * 0.7 )
 testSize <- nrow(dataRenombrada) - trainSize
-set.seed(126)
+set.seed(123)
 trainPosition <- sample(x = nrow(dataRenombrada), size = trainSize)
 trainSet <- dataRenombrada[trainPosition,]
 testSet <- dataRenombrada[-trainPosition,]
 
 #### 6- MODELIZO CON TRAINset ####
 
-modelo <- modelizo_lm_BlackWell(trainSet)
+modelo <- modelizo_svm_BlackWell(trainSet)
 summary(modelo)
-# Coefficients:
-#   Estimate Std. Error t value Pr(>|t|)  
-# (Intercept)                    5.519e+02  5.736e+02   0.962   0.5122  
-# ProductTypeDisplay             2.615e+02  7.807e+02   0.335   0.7942  
-# ProductTypeExtended_Warranty  -7.313e+02  4.922e+02  -1.486   0.3771  
-# ProductTypeGameConsole         1.027e+03  3.533e+02   2.907   0.2109  
-# ProductTypePC                  1.126e+03  7.435e+02   1.515   0.3714  
-# ProductTypePrinter             5.851e+02  4.890e+02   1.197   0.4432  
-# ProductTypeSmartphone         -1.856e+02  3.577e+02  -0.519   0.6954  
-# ProductTypeTablet             -1.190e+03  2.907e+02  -4.095   0.1525  
-# Price                         -4.430e-03  4.445e-01  -0.010   0.9937  
-# x3StarReviews                  5.525e+01  3.778e+00  14.624   0.0435 *
-#   X.Positive.Service.Review.     5.523e+00  1.231e+00   4.486   0.1396  
-# NegativeServiceReview         -2.020e+01  8.812e+00  -2.292   0.2619  
-# WouldConsumerRecommendProduct -4.610e+02  6.337e+02  -0.727   0.5996  
-# ProductDepth                  -3.007e+01  4.164e+01  -0.722   0.6018  
-# ProductWidth                   2.177e+01  3.007e+01   0.724   0.6011  
-# ProductHeight                 -4.689e+01  3.067e+01  -1.529   0.3688  
-# ---
-#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+# Call:
+#   svm(formula = datasource$Volume ~ ., data = datasource)
 # 
-# Residual standard error: 191.4 on 1 degrees of freedom
-# Multiple R-squared:  0.9997,	Adjusted R-squared:  0.996 
-# F-statistic: 266.4 on 15 and 1 DF,  p-value: 0.04804
+# 
+# Parameters:
+#   SVM-Type:  eps-regression 
+# SVM-Kernel:  radial 
+# cost:  1 
+# gamma:  0.05 
+# epsilon:  0.1 
+# 
+# 
+# Number of Support Vectors:  14
 
 
 #### 7-(fallo) pruebo el trainSet  ####
 
 comparisonTrain <- comprobando(modeloM = modelo, datos = trainSet)
 comparisonTrain <- addComparativa(comparisonTrain)
-mapeTrain <- mi_mape(comparisonTrain)   #60.13542% de error absoluto
+mapeTrain <- mi_mape(comparisonTrain)   #261.3445% de error absoluto
 
 # el testSet  # 
 
 comparisonTest <- comprobando(modeloM = modelo, datos = testSet)
 comparisonTest <- addComparativa(comparisonTest)
-mapeTest <- mi_mape(comparisonTest)
+mapeTest <- mi_mape(comparisonTest)  #65.67938% de error absoluto
+
+#con 123 la cosa empeoró:
+#   
+# > mapeTest     3144.439
+# > mapeTrain    838.4039
 
 mapeTest
 mapeTrain
-#No puedo comprobar con tan pocos datos, por lo que observo. 
-#Paso a generar un modelo sin Test y que sea lo que Dios quiera.
-
-#123 le faltan levels Laptop y Netbook 124 le falta Extended_Warranty
-#126 dice:
-# > comparisonTest <- comprobando(modeloM = modelo, datos = testSet)
-# Warning messages:
-#   1: In predict.lm(modeloM, datos, interval = "predict", level = 0.95) :
-#   prediction from a rank-deficient fit may be misleading
-# 2: In qt((1 - level)/2, df) : NaNs produced
 
 #### 8- MODELIZO SIN TRAINset ####
-
-modelo <- modelizo_lm_BlackWell(dataRenombrada)
+modelo <- modelizo_svm_BlackWell(dataRenombrada)
 summary(modelo)
 
 
 comparisonTrain <- comprobando(modeloM = modelo, datos = dataRenombrada)
 comparisonTrain <- addComparativa(comparisonTrain)  
-mapeTrain <- mi_mape(comparisonTrain)    #76.18027% de error absoluto
+mapeTrain <- mi_mape(comparisonTrain)    #941.7546% de error absoluto
 
-# Coefficients:
-#   Estimate Std. Error t value Pr(>|t|)    
-# (Intercept)                     357.7941   368.0057   0.972 0.368474    
-# ProductTypeDisplay              726.4499   466.7444   1.556 0.170613    
-# ProductTypeExtended_Warranty   -814.0519   281.0135  -2.897 0.027447 *  
-#   ProductTypeGameConsole          927.9134   211.0287   4.397 0.004583 ** 
-#   ProductTypeLaptop              -251.4721   170.4050  -1.476 0.190470    
-# ProductTypeNetbook             -304.2204   287.2389  -1.059 0.330309    
-# ProductTypePC                   351.5530   187.6150   1.874 0.110097    
-# ProductTypePrinter              562.2555   284.3682   1.977 0.095392 .  
-# ProductTypeSmartphone          -239.7619   241.5493  -0.993 0.359232    
-# ProductTypeTablet             -1252.3633   188.7887  -6.634 0.000566 ***
-#   Price                             0.3674     0.2086   1.761 0.128749    
-# x3StarReviews                    54.4020     2.5395  21.422 6.75e-07 ***
-#   X.Positive.Service.Review.        5.4624     0.8044   6.790 0.000499 ***
-#   NegativeServiceReview           -15.9870     4.1520  -3.850 0.008455 ** 
-#   WouldConsumerRecommendProduct  -219.1185   389.8705  -0.562 0.594454    
-# ProductDepth                     -1.0111    11.6764  -0.087 0.933813    
-# ProductWidth                     -9.6243    11.7561  -0.819 0.444270    
-# ProductHeight                   -52.8847    20.1418  -2.626 0.039290 *  
-#   ---
-#   Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-# 
-# Residual standard error: 131.2 on 6 degrees of freedom
-# Multiple R-squared:  0.9993,	Adjusted R-squared:  0.9974 
-# F-statistic: 528.9 on 17 and 6 DF,  p-value: 4.176e-08
-
-
+# Me quedo con el del TrainSet
 
 #### 9- Making new predictions  #### 
 #dataRaw <- read.csv("/Users/luis/Desktop/existing product attributes.csv", stringsAsFactors=FALSE)
@@ -183,8 +139,6 @@ str(dataP)
 
 predictions <- comprobando(modeloM = modelo, datos = dataP)
 resultado <- cbind(data.frame(dataNewP$X.Product...), predictions)
-write.csv(resultado, file = "/Users/luis/Desktop/existingResult_LM.csv" )
+write.csv(resultado, file = "/Users/luis/Desktop/existingResult_svm.csv" )
 
 resultado
-
-#### 10- CARGO LA COMPARATIVA  #### 
