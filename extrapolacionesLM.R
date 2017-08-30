@@ -1,18 +1,18 @@
-#!RStudio
+#!Rscript
 
 
 # probando protocolo actuación --------------------------------------------
 cat("\014")       #limpio consola
 rm(list = ls())   #borro todos los objetos de memoria
 
-#### 1- TIPO DE DATOS ####
+#### 1- ABSORCION/TIPO DE DATOS ####
 #por columna: Renombrar columnas y ver si tu tipo de datos es correcto.
 #Es posible que en este campo ya necesite observar los NA
 
 source("/Users/luis/Desktop/Mooc Pharo/dd/Modulo 2/Mod2Task2/Mod2T2Luis/libLuisMod2Task2.R")
 dataRaw <- read.csv("/Users/luis/Desktop/existing product attributes.csv", stringsAsFactors=FALSE)
-dataRenombrada <- preparacionDatos(dataRaw)
-dataRenombrada <- seleccionFilasBuenas(dataRenombrada)
+dataRenombrada <- preparacionDatos(dataRaw) # a posteriori cuando 2-, 3-, 4- ya están terminados
+dataRenombrada <- seleccionFilasBuenas(dataRenombrada) # a posteriori cuando 2-, 3-, 4- ya están terminados
 
 #### 2- ANALIZO TEMA DE FEATURES por tema ####
 #por columna: observo de que van y elimino aquellos que
@@ -82,6 +82,7 @@ testSet <- dataRenombrada[-trainPosition,]
 
 modelo <- modelizo_lm_BlackWell(trainSet)
 summary(modelo)
+#con 123 de semilla
 # Coefficients:
 #   Estimate Std. Error t value Pr(>|t|)  
 # (Intercept)                    5.519e+02  5.736e+02   0.962   0.5122  
@@ -107,9 +108,42 @@ summary(modelo)
 # Multiple R-squared:  0.9997,	Adjusted R-squared:  0.996 
 # F-statistic: 266.4 on 15 and 1 DF,  p-value: 0.04804
 
+# con 126 de semilla:
+#   
+#   Call:
+#   lm(formula = datasource$Volume ~ ., data = datasource)
+# 
+# Residuals:
+#   ALL 17 residuals are 0: no residual degrees of freedom!
+#   
+#   Coefficients: (1 not defined because of singularities)
+# Estimate Std. Error t value Pr(>|t|)
+# (Intercept)                   -6.864e+02         NA      NA       NA
+# ProductTypeDisplay             9.084e+01         NA      NA       NA
+# ProductTypeExtended_Warranty  -1.232e+04         NA      NA       NA
+# ProductTypeGameConsole         6.093e+02         NA      NA       NA
+# ProductTypeLaptop              1.807e+01         NA      NA       NA
+# ProductTypeNetbook             6.748e+02         NA      NA       NA
+# ProductTypePC                  6.561e+01         NA      NA       NA
+# ProductTypePrinter             2.725e+02         NA      NA       NA
+# ProductTypeSmartphone          3.137e+02         NA      NA       NA
+# ProductTypeTablet              3.560e+02         NA      NA       NA
+# Price                         -1.297e-15         NA      NA       NA
+# x3StarReviews                  4.868e+00         NA      NA       NA
+# X.Positive.Service.Review.     4.947e+01         NA      NA       NA
+# NegativeServiceReview         -2.000e+01         NA      NA       NA
+# WouldConsumerRecommendProduct  5.686e+02         NA      NA       NA
+# ProductDepth                   3.993e+01         NA      NA       NA
+# ProductWidth                  -4.189e+01         NA      NA       NA
+# ProductHeight                         NA         NA      NA       NA
+# 
+# Residual standard error: NaN on 0 degrees of freedom
+# Multiple R-squared:      1,	Adjusted R-squared:    NaN 
+# F-statistic:   NaN on 16 and 0 DF,  p-value: NA
+
 
 #### 7-(fallo) pruebo el trainSet  ####
-
+#con 123 de semilla
 comparisonTrain <- comprobando(modeloM = modelo, datos = trainSet)
 comparisonTrain <- addComparativa(comparisonTrain)
 mapeTrain <- mi_mape(comparisonTrain)   #60.13542% de error absoluto
@@ -178,16 +212,22 @@ mapeTrain <- mi_mape(comparisonTrain)    #76.18027% de error absoluto
 #dataNewP <- read.csv("/Users/luis/Desktop/new product attributesII.csv", stringsAsFactors=FALSE)
 dataNewP <- read.csv("/Users/luis/Desktop/new product attributes.csv", stringsAsFactors=FALSE)
 
-dataP <- preparacionDatos(dataNewP)
-dataP <- seleccionColumnasConsolidadas(dataP)
+dataNewRenombrado <- preparacionDatos(dataNewP)
+dataP <- seleccionColumnasConsolidadas(dataNewRenombrado)
 
 str(dataP)
 # summary(modelo)
 
 predictions <- comprobando(modeloM = modelo, datos = dataP)
-resultado <- cbind(data.frame(dataNewP$X.Product...), predictions)
+VolPredictions <- predictions[,11]
+resultado <- cbind(dataNewRenombrado, VolPredictions)
+beneficios <- resultado$Price * resultado$ProfitMargin * resultado$VolPredictions
+resultado$beneficios <- beneficios
+resultado$beneficios <- as.integer(resultado$beneficios)
 write.csv(resultado, file = "/Users/luis/Desktop/existingResult_LM.csv" )
 
 resultado
 
 #### 10- CARGO LA COMPARATIVA  #### 
+
+

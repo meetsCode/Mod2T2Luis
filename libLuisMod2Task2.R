@@ -1,6 +1,8 @@
 #libLuisMod2Task2.R
 # uso: 
 # source("/Users/luis/Desktop/Mooc Pharo/dd/Modulo 2/Mod2Task2/Mod2T2Luis/libLuisMod2Task2.R")
+#!Rscript
+
 
 pruebaSource <- function(dataRAW = 0){
   dataNew <- 5
@@ -61,7 +63,6 @@ seleccionFilasBuenas <- function(dataRAW ){
   #Son datos que alguien ha repetido porque son iguales en todos campos
   
   #filasDeTrampas <- -41:-35
-  # filasDeTrampas <- c(filasDeTrampas, c(1, 2, 3, 4, 5, 26, 35, 36, 49, 50, 51, 52, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73) )
   filasCorrectas <- c(1, 2, 3, 4, 5, 26, 35, 36, 49, 50, 51, 52, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 80)
   dataNew <- dataRAW[filasCorrectas, ]
   return(dataNew)
